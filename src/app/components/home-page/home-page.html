@@ -1,0 +1,20 @@
+<header>
+    <h1>Countries ranked by HDI</h1>
+</header>
+<main>
+    @for (cat of categories; track cat[0]) {
+    @if (countries().filter(x => x.score >= cat[1] && x.score < cat[2]).length !==0) { <div class="my-4">
+        <h2>{{ cat[0] }} Development</h2>
+        <app-hdi-table [data]="countries().filter(x => x.score >= cat[1] && x.score < cat[2])" />
+        </div>
+        }
+        }
+</main>
+<footer>
+    <a routerLink="/country-add">
+        <h2>Country Add</h2>
+    </a>
+    <a routerLink="/score-add">
+        <h2>Score Add</h2>
+    </a>
+</footer>

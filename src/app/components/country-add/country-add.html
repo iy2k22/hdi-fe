@@ -1,0 +1,19 @@
+<form [formGroup]="theForm">
+    <label for="name">Name:</label>
+    <input id="name" type="text" formControlName="name">
+
+    <label for="continent">Continent:</label>
+    <select id="continent" formControlName="continent">
+        @for (cnt of continents(); track cnt.id) {
+            <option [value]="cnt.id">{{ cnt.name }}</option>
+        }
+    </select>
+    
+    <label for="flag1">Flag 1:</label>
+    <input id="flag1" type="text" formControlName="flag1">
+    
+    <label for="flag2">Flag 2:</label>
+    <input id="flag2" type="text" formControlName="flag2">
+    
+    <button (click)="sendData($event)">Submit</button>
+</form>

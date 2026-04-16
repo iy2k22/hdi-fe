@@ -1,0 +1,19 @@
+<form [formGroup]="theForm">
+    <label for="country">Country:</label>
+    <select id="country" formControlName="country">
+        @for (cnt of countries(); track cnt.name) {
+            <option [value]="cnt.id">
+                <span [innerHTML]="cnt.flag"></span>
+                {{ cnt.name }}
+            </option>
+        }
+    </select>
+    
+    <label for="score">Score:</label>
+    <input type="number" min="0.000" max="0.999" step="0.001" formControlName="score" />
+    
+    <label for="year">Year:</label>
+    <input type="number" min="1990" formControlName="year" />
+    
+    <button (click)="sendData($event)">Submit</button>
+</form>

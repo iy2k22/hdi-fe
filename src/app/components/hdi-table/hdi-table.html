@@ -1,0 +1,15 @@
+<table class="mx-auto w-100">
+    <col style="width: 70%" />
+    <col style="width: 30%" />
+    @for (cnt of data(); track cnt.name) {
+    <tr>
+        <td class="text-start">
+            <span [innerHTML]="cnt.flag"></span>
+            {{ cnt.name }}
+        </td>
+        <td class="text-end">
+            {{ cnt.score.toFixed(3) }}
+        </td>
+    </tr>
+    }
+</table>
