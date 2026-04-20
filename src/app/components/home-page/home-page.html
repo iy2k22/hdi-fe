@@ -3,7 +3,7 @@
 </header>
 <main>
     @for (cat of categories; track cat[0]) {
-    @if (countries().filter(x => x.score >= cat[1] && x.score < cat[2]).length !==0) { <div class="my-4">
+    @if (countries().filter(x => x.score >= cat[1] && x.score < cat[2]).length !==0) { <div class="my-5">
         <h2>{{ cat[0] }} Development</h2>
         <app-hdi-table [data]="countries().filter(x => x.score >= cat[1] && x.score < cat[2])" />
         </div>
