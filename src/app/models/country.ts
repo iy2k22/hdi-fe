@@ -4,4 +4,5 @@ export interface Country {
     continent: number;
     flag1: string;
     flag2: string;
+    isMuslim: boolean;
 }

@@ -1,6 +1,8 @@
-<form [formGroup]="theForm">
+<form [formGroup]="theForm" class="text-start">
     <label for="name">Name:</label>
     <input id="name" type="text" formControlName="name">
+    
+    <br />
 
     <label for="continent">Continent:</label>
     <select id="continent" formControlName="continent">
@@ -9,11 +11,22 @@
         }
     </select>
     
+    <br />
+
     <label for="flag1">Flag 1:</label>
-    <input id="flag1" type="text" formControlName="flag1">
+    <input id="flag1" type="text" formControlName="flag1" />
+
+    <br />
     
     <label for="flag2">Flag 2:</label>
-    <input id="flag2" type="text" formControlName="flag2">
+    <input id="flag2" type="text" formControlName="flag2" />
     
+    <br />
+
+    <input id="isMuslim" type="checkbox" formControlName="isMuslim" />
+    <label for="isMuslim">Muslim?</label>
+
+    <br />
+
     <button (click)="sendData($event)">Submit</button>
 </form>

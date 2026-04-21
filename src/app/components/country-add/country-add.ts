@@ -21,7 +21,8 @@ export class CountryAdd {
     name: [''],
     continent: [1],
     flag1: [''],
-    flag2: ['']
+    flag2: [''],
+    isMuslim: [false]
   });
   
   sendData(e: Event) {
