@@ -1,12 +1,24 @@
 <header>
     <h1>Countries ranked by HDI</h1>
+    <br />
+    <label for="continent">Continent:</label>
+    <select id="continent" [formControl]="continent">
+        <option [value]="0">All</option>
+        @for (cnt of continents(); track cnt.id) {
+        <option [value]="cnt.id">{{ cnt.name }}</option>
+        }
+    </select>
+    <input type="checkbox" id="isMuslim" [formControl]="isMuslim" />
+    <label for="isMuslim">Muslim?</label>
 </header>
 <main>
+    @if (cnt$ | async; as cnt) {
     @for (cat of categories; track cat[0]) {
-    @if (countries().filter(x => x.score >= cat[1] && x.score < cat[2]).length !== 0) { <div class="my-5">
+    @if (cnt.filter(x => x.score >= cat[1] && x.score < cat[2]).length !==0) { <div class="my-5">
         <h2>{{ cat[0] }} Development</h2>
-        <app-hdi-table [data]="countries().filter(x => x.score >= cat[1] && x.score < cat[2])" />
+        <app-hdi-table [data]="cnt.filter(x => x.score >= cat[1] && x.score < cat[2])" />
         </div>
+        }
         }
         }
 </main>

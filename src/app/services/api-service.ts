@@ -30,7 +30,12 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}/AddScore`, score);
   }
   
-  getScoreListCountry() {
-    return this.http.get<ScoreListCountry[]>(`${this.baseUrl}/GetScoreListCountry`);
+  getScoreListCountry(continent: number, isMuslim: boolean) {
+    return this.http.get<ScoreListCountry[]>(`${this.baseUrl}/GetScoreListCountry`, {
+      params: {
+        continent: continent,
+        isMuslim: isMuslim
+      }
+    });
   }
 }
