@@ -8,7 +8,11 @@
             {{ cnt.name }}
         </td>
         <td class="text-end">
+        @if (cnt.score !== -1) {
             {{ cnt.score.toFixed(3) }}
+        } @else {
+            -.---
+        }
         </td>
     </tr>
     }

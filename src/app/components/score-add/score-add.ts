@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ApiService } from '../../services/api-service';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Score } from '../../models/score';
 
@@ -21,18 +21,27 @@ export class ScoreAdd {
     scoreValue: [0],
     year: [2023]
   })
+  notRanked = new FormControl(false, { nonNullable: true });
   
   sendData(e: Event) {
     e.preventDefault();
-
+    
     const toSend: Score = {
       id: 0,
       ...this.theForm.value
     };
     
+    if (!toSend.scoreValue)
+      toSend.scoreValue = -1;
+    
     return this.apiSvc.addScore(toSend).subscribe({
       next: () => (console.log(`Added score for country ${toSend.country}!`)),
       error: () => (console.error(`Could not add score for country ${toSend.country}`))
     });
+  }
+  
+  changeRank(e: Event) {
+    e.preventDefault();
+    this.notRanked.value ? this.theForm.get('scoreValue')?.disable() : this.theForm.get('scoreValue')?.enable();
   }
 }

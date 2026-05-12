@@ -26,7 +26,8 @@ export class HomePage {
     ["Very High", 0.8, 1],
     ["High", 0.7, 0.8],
     ["Medium", 0.55, 0.7],
-    ["Low", 0, 0.55]
+    ["Low", 0, 0.55],
+    ["Not ranked", -1, 0]
   ];
   
   countries!: ScoreListCountry[];
