@@ -1,47 +1,133 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api-service';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Score } from '../../models/score';
+import { Score, ScoreAddDTO } from '../../models/score';
+import { Footer } from '../footer/footer';
+import { AppToast } from '../toast/toast';
+import { ToastSvc } from '../../services/toast-svc';
+import { CountryNames } from '../../models/country_names';
 
 @Component({
   selector: 'app-score-add',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, Footer, AppToast],
   templateUrl: './score-add.html',
   styleUrl: './score-add.css',
 })
-export class ScoreAdd {
+export class ScoreAdd implements OnInit {
   private apiSvc = inject(ApiService);
   private fb = inject(FormBuilder);
+  private toastSvc = inject(ToastSvc);
+  
+  scrId: number = 0;
+  
+  min: number = 0;
+  max: number = 1;
+  step: number = 0.001;
+  
   
   countries = toSignal(this.apiSvc.getScoreAddCountry(), { initialValue: [] });
+  scoreTypes = toSignal(this.apiSvc.getScoreTypes(), { initialValue: [] });
+  countryNames!: CountryNames;
   
+  /*
   theForm: FormGroup = this.fb.group({
     country: [0],
     scoreValue: [0],
-    year: [2023]
-  })
-  notRanked = new FormControl(false, { nonNullable: true });
+    year: [2023],
+    scoreType: [1]
+  });
+  */
+  theForm: FormArray = this.fb.array([this.fb.group({
+    country: [0],
+    scoreValue: [0],
+    year: [2023],
+    scoreType: [1],
+    notRanked: [false],
+    editing: [false],
+    id: [0]
+  })]);
+
+ 
+  ngOnInit(): void {
+    this.apiSvc.getCountryNames().subscribe(x => this.countryNames = x);
+  }
   
   sendData(e: Event) {
     e.preventDefault();
     
-    const toSend: Score = {
-      id: 0,
-      ...this.theForm.value
-    };
+    const toSend: ScoreAddDTO[] = this.theForm.controls.map(
+      x => {
+        const result: ScoreAddDTO = x.value;
+        if (result.notRanked)
+          result.scoreValue = -1;
+        return result;
+      }
+    );
     
-    if (!toSend.scoreValue)
-      toSend.scoreValue = -1;
-    
-    return this.apiSvc.addScore(toSend).subscribe({
-      next: () => (console.log(`Added score for country ${toSend.country}!`)),
-      error: () => (console.error(`Could not add score for country ${toSend.country}`))
-    });
+    return this.apiSvc.addScores(toSend).subscribe({
+      next: () => this.toastSvc.show({
+        text: 'Uploaded scores',
+        type: 'success'
+      }),
+      error: () => this.toastSvc.show({
+        text: 'Couldn\'t upload scores',
+        type: 'danger'
+      })
+    })
   }
   
-  changeRank(e: Event) {
-    e.preventDefault();
-    this.notRanked.value ? this.theForm.get('scoreValue')?.disable() : this.theForm.get('scoreValue')?.enable();
+  changeRank(idx: number) {
+    const toWorkOn = this.theForm.at(idx);
+    toWorkOn.value.notRanked ?
+    toWorkOn.get('scoreValue')?.disable()
+    :
+    toWorkOn.get('scoreValue')?.enable()
+    ;
+  }
+  
+  getScore(idx: number) {
+    const toWorkOn = this.theForm.at(idx);
+    const { country, year, scoreType } = toWorkOn.value;
+    const theType = this.scoreTypes()[scoreType - 1];
+    this.min = theType.min;
+    this.max = theType.max;
+    this.step = theType.step;
+    console.log(scoreType);
+    this.apiSvc.getScore(country, year, scoreType).subscribe(x => {
+      if (x) {
+        toWorkOn.patchValue({
+          scoreValue: x.scoreValue,
+          editing: true,
+          id: x.id
+        });
+        if (x.scoreValue === -1) {
+          toWorkOn.get('notRanked')?.setValue(true);
+          toWorkOn.get('scoreValue')?.disable();
+        } else {
+          toWorkOn.get('notRanked')?.setValue(false);
+          toWorkOn.get('scoreValue')?.enable();
+        }
+      } else {
+        toWorkOn.patchValue({
+          id: 0,
+          editing: false
+        })
+      }
+    })
+  }
+  
+  addRow() {
+    this.theForm.push(this.fb.group({
+    country: [0],
+    scoreValue: [0],
+    year: [2023],
+    scoreType: [1],
+    notRanked: [false]
+    }));
+  }
+  
+  deleteRow(idx: number) {
+    this.theForm.removeAt(idx);
   }
 }

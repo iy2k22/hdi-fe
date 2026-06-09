@@ -1,22 +1,79 @@
-<form [formGroup]="theForm">
-    <label for="country">Country:</label>
-    <select id="country" formControlName="country">
-        @for (cnt of countries(); track cnt.name) {
-            <option [value]="cnt.id">
-                <span [innerHTML]="cnt.flag"></span>
-                {{ cnt.name }}
-            </option>
+<header>
+    <h1 class="bg-dark text-white p-5">Add/Edit a score</h1>
+    <div>
+        Here you can add/edit a score for a country/territory.
+    </div>
+</header>
+
+<main class="my-4">
+    <div class="row justify-content-center">
+        <div class="col-2">
+            <label class="form-label">Country</label>
+        </div>
+        <div class="col-2">
+            <label class="form-label">Score</label>
+        </div>
+        <div class="col-2">
+            <label class="form-label">Year</label>
+        </div>
+        <div class="col-2">
+            <label class="form-label">Score Type</label>
+        </div>
+        <div class="col-2"></div>
+    </div>
+    <form [formArray]="theForm">
+        @for (formCnt of theForm.controls; track formCnt; let idx = $index) {
+        <div [formGroupName]="idx">
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <select class="form-select" formControlName="country" (change)="getScore(idx)">
+                        @for (cnt of countries(); track cnt.name) {
+                        <option [value]="cnt.id">
+                            <span [innerHTML]="cnt.flag"></span>
+                            {{ cnt.name }}
+                        </option>
+                        }
+                    </select>
+                </div>
+
+
+                <div class="col-2">
+                    <input type="number" [min]="min" [max]="max" [step]="step" class="form-control"
+                        formControlName="scoreValue" />
+
+                    <input class="me-1" type="checkbox" formControlName="notRanked" (change)="changeRank(idx)" />
+                    <label for="notRanked" class="form-label">Not Ranked?</label>
+                </div>
+
+                <div class="col-2">
+                    <input type="number" min="1990" class="form-control" formControlName="year"
+                        (change)="getScore(idx)" />
+                </div>
+
+                <div class="col-2">
+                    <select id="score-type" formControlName="scoreType" class="form-select" (change)="getScore(idx)">
+                        @for (scrTyp of scoreTypes(); track scrTyp.id) {
+                        <option [value]="scrTyp.id">{{ scrTyp.name }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-2">
+                    <button class="btn btn-danger" [disabled]="theForm.length === 1"
+                        (click)="deleteRow(idx)">Delete</button>
+                </div>
+            </div>
+        </div>
         }
-    </select>
-    
-    <input type="checkbox" [formControl]="notRanked" (change)="changeRank($event)" />
-    <label for="notRanked">Not Ranked?</label>
-    
-    <label for="score">Score:</label>
-    <input type="number" min="0.000" max="0.999" step="0.001" formControlName="scoreValue" />
-    
-    <label for="year">Year:</label>
-    <input type="number" min="1990" formControlName="year" />
-    
-    <button (click)="sendData($event)">Submit</button>
-</form>
+
+        <br />
+        <button class="btn btn-success" (click)="addRow()">Add</button>
+        <button class="btn btn-primary" (click)="sendData($event)">Submit</button>
+    </form>
+</main>
+
+<footer>
+    <app-footer></app-footer>
+</footer>
+
+<app-toast />

@@ -1,23 +1,13 @@
 <header>
-    <h1 class="bg-dark text-white p-5">Countries ranked by HDI</h1>
+    <h1 class="bg-dark text-white p-5">Country Ranking</h1>
     <br />
     <div class="mx-1">
-        A list of most countries ranked by their Human Development Index.
-        The index is calculated by measuring three variables:
-        <ul>
-            <li>Health</li>
-            <li>Education</li>
-            <li>Standard of Living</li>
-        </ul>
-        It is then measured on a scale between 0 and 1.
-        The data here is sourced from <a href="https://hdr.undp.org/data-center/country-insights#/ranks">the UNDP</a>.
-        While the UN's website does provide similar functionality, I didn't like the way they separated countries (by "region"), and I preferred to split by continent.
-        I also wanted to specifically measure Islamic countries, and there was no way to do this on the site.
+        Here you can rank countries by one of the indexes under 'Score Type'.
     </div>
     <br />
     <form class="row justify-content-center">
-    <div class="col-4">
-        <label for="continent" class="form-label">Continent:</label>
+    <div class="col-lg-4 col-sm-12">
+        <label for="continent" class="form-label">Continent</label>
         <select class="form-select" id="continent" [formControl]="continent">
             <option [value]="0">All</option>
             @for (cnt of continents(); track cnt.id) {
@@ -25,32 +15,47 @@
             }
         </select>
     </div>
-        <div class="col-4 py-4">
-            <input class="form-check-input" type="checkbox" id="isMuslim" [formControl]="isMuslim" />
+        <div class="col-lg-4 col-sm-12">
+            <label class="form-label" for="year">Year</label>
+            <input class="form-control" type="number" max="2023" min="1990" [formControl]="year" />
+        </div>
+        <div class="col-lg-4 col-sm-12">
+            <label class="form-label" for="score-type">Score Type</label>
+            <select
+            class="form-select"
+            [formControl]="scoreType"
+            id="score-type">
+                @for (typ of scoreTypes(); track typ.id) {
+                    <option [value]="typ.id">{{ typ.name }}</option>
+                }
+            </select>
+        </div>
+        <div class="col-4 pt-4">
+            <input class="form-check-input me-1" type="checkbox" id="isMuslim" [formControl]="isMuslim" />
             <label class="form-check-label" for="isMuslim">Muslim?</label>
         </div>
     </form>
 </header>
 <main class="p-3">
     @if (cnt$ | async; as cnt) {
-    @for (cat of categories; track cat[0]) {
-    @if (cnt.filter(x => x.score >= cat[1] && x.score < cat[2]).length !==0) { <div class="my-5">
-    @if (cat[0] !== 'Not ranked') {
-        <h2>{{ cat[0] }} Development</h2>
-    } @else {
-        <h2>{{ cat[0] }}</h2>
+        @if (scoreType.value == 1) {
+            @for (cat of categories; track cat[0]) {
+                @if (cnt.filter(x => x.score >= cat[1] && x.score < cat[2]).length !== 0) {
+                    <div class="my-5">
+                    @if (cat[0] !== 'Not ranked') {
+                        <h2>{{ cat[0] }} Development</h2>
+                    } @else {
+                        <h2>{{ cat[0] }}</h2>
+                    }
+                        <app-hdi-table [data]="cnt.filter(x => x.score >= cat[1] && x.score < cat[2])" [round]="round" />
+                    </div>
+                }
+            }
+        } @else {
+            <app-hdi-table [data]="cnt" [round]="round" />
+        }
     }
-        <app-hdi-table [data]="cnt.filter(x => x.score >= cat[1] && x.score < cat[2])" />
-        </div>
-        }
-        }
-        }
 </main>
 <footer>
-    <a routerLink="/country-add">
-        <h2>Country Add</h2>
-    </a>
-    <a routerLink="/score-add">
-        <h2>Score Add</h2>
-    </a>
+    <app-footer />
 </footer>

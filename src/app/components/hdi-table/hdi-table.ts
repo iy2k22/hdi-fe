@@ -7,9 +7,7 @@ import { ScoreListCountry } from '../../models/score_list_country';
   templateUrl: './hdi-table.html',
   styleUrl: './hdi-table.css',
 })
-export class HdiTable implements OnInit {
+export class HdiTable {
   data = input<ScoreListCountry[]>([]);
-  
-  ngOnInit(): void {
-  }
+  round = input<number>(3);
 }

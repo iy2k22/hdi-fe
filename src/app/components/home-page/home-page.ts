@@ -8,6 +8,8 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { combineLatest, startWith, switchMap } from 'rxjs';
 import { ScoreListCountry } from '../../models/score_list_country';
 import { AsyncPipe } from '@angular/common';
+import { Footer } from "../footer/footer";
+import { ScoreType } from '../../models/score_types';
 
 
 // name, min, max
@@ -15,7 +17,7 @@ type Category = [string, number, number];
 
 @Component({
   selector: 'app-home-page',
-  imports: [RouterLink, HdiTable, ReactiveFormsModule, AsyncPipe],
+  imports: [RouterLink, HdiTable, ReactiveFormsModule, AsyncPipe, Footer],
   templateUrl: './home-page.html',
   styleUrl: './home-page.css',
 })
@@ -33,6 +35,9 @@ export class HomePage {
   countries!: ScoreListCountry[];
   continent = new FormControl(0, { nonNullable: true });
   isMuslim = new FormControl(false, { nonNullable: true });
+  year = new FormControl(2023, { nonNullable: true });
+  scoreType = new FormControl(1, { nonNullable: true });
+  round: number = 3;
   
   /*
   cnt$ = this.continent.valueChanges.pipe(
@@ -42,10 +47,15 @@ export class HomePage {
 
   cnt$ = combineLatest([
     this.continent.valueChanges.pipe(startWith(this.continent.value)),
-    this.isMuslim.valueChanges.pipe(startWith(this.isMuslim.value))
+    this.isMuslim.valueChanges.pipe(startWith(this.isMuslim.value)),
+    this.year.valueChanges.pipe(startWith(this.year.value)),
+    this.scoreType.valueChanges.pipe(startWith(this.scoreType.value))
   ]).pipe(
-    switchMap(([v1, v2]) => this.apiSvc.getScoreListCountry(v1, v2))
+    switchMap((values) => this.apiSvc.getScoreListCountry(...values))
   );
+  
+  scr$ = this.scoreType.valueChanges.subscribe(x => this.round = this.scoreTypes()[x - 1].round);
 
   continents = toSignal(this.apiSvc.getContinents(), { initialValue: [] });
+  scoreTypes = toSignal(this.apiSvc.getScoreTypes(), { initialValue: [] });
 }

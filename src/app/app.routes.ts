@@ -5,7 +5,7 @@ import { ScoreAdd } from './components/score-add/score-add';
 
 export const routes: Routes = [
     {
-        path: '',
+        path: 'home-page',
         component: HomePage
     },
     {

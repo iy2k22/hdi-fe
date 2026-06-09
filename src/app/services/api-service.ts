@@ -3,8 +3,10 @@ import { Injectable } from '@angular/core';
 import { Continent } from '../models/continent';
 import { Country } from '../models/country';
 import { ScoreAddCountry } from '../models/score_add_country';
-import { Score } from '../models/score';
+import { Score, ScoreAddDTO } from '../models/score';
 import { ScoreListCountry } from '../models/score_list_country';
+import { CountryNames } from '../models/country_names';
+import { ScoreType } from '../models/score_types';
 
 @Injectable({
   providedIn: 'root',
@@ -26,16 +28,60 @@ export class ApiService {
     return this.http.get<ScoreAddCountry[]>(`${this.baseUrl}/ScoreAddCountry`);
   }
   
-  addScore(score: Score) {
-    return this.http.post(`${this.baseUrl}/AddScore`, score);
+  addScores(scores: ScoreAddDTO[]) {
+    return this.http.post(`${this.baseUrl}/AddScores`, scores);
   }
   
-  getScoreListCountry(continent: number, isMuslim: boolean) {
+  getScoreListCountry(
+    continent: number,
+    isMuslim: boolean,
+    year: number,
+  scoreType: number) {
     return this.http.get<ScoreListCountry[]>(`${this.baseUrl}/GetScoreListCountry`, {
       params: {
-        continent: continent,
-        isMuslim: isMuslim
+        continent,
+        isMuslim,
+        year,
+        scoreType
       }
     });
+  }
+  
+  getCountryNames() {
+    return this.http.get<CountryNames>(`${this.baseUrl}/GetCountryNames`);
+  }
+  
+  getScore(country: number, year: number, scoreType: number) {
+    return this.http.get<Score | undefined>(`${this.baseUrl}/GetScore`, {
+      params: {
+        country,
+        year,
+        scoreType
+      }
+    })
+  }
+  
+  updateScore(scr: Score) {
+    return this.http.patch<number>(`${this.baseUrl}/UpdateScore`, scr);
+  }
+  
+  getCountryNamesOnly() {
+    return this.http.get<string[]>(`${this.baseUrl}/GetCountryNamesOnly`);
+  }
+  
+  getCountry(name: string) {
+    return this.http.get<Country | undefined>(`${this.baseUrl}/GetCountry`, {
+      params: {
+        countryName: name
+      }
+    })
+  }
+  
+  updateCountry(country: Country) {
+    return this.http.patch<number>(`${this.baseUrl}/UpdateCountry`, country);
+  }
+  
+  getScoreTypes() {
+    return this.http.get<ScoreType[]>(`${this.baseUrl}/GetScoreTypes`);
   }
 }

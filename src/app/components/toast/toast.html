@@ -1,0 +1,10 @@
+<div class="toast-container position-fixed top-0 end-0 p-3 text-start">
+  @if (toastSvc.currentToast(); as msg) {
+  <div [class]="'toast align-items-center text-bg-' + msg.type + ' border-0'" role="alert" aria-live="assertive" aria-atomic="true" #toastEl>
+    <div class="toast-body">
+      {{ msg.text }}
+    </div>
+    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+  }
+</div>

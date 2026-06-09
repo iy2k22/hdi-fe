@@ -9,7 +9,7 @@
         </td>
         <td class="text-end">
         @if (cnt.score !== -1) {
-            {{ cnt.score.toFixed(3) }}
+            {{ cnt.score.toFixed(round()) }}
         } @else {
             -.---
         }
