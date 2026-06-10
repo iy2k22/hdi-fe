@@ -38,6 +38,8 @@ export class HomePage {
   year = new FormControl(2023, { nonNullable: true });
   scoreType = new FormControl(1, { nonNullable: true });
   round: number = 3;
+  min: number = 0;
+  max: number = 1;
   
   /*
   cnt$ = this.continent.valueChanges.pipe(
@@ -54,7 +56,11 @@ export class HomePage {
     switchMap((values) => this.apiSvc.getScoreListCountry(...values))
   );
   
-  scr$ = this.scoreType.valueChanges.subscribe(x => this.round = this.scoreTypes()[x - 1].round);
+  scr$ = this.scoreType.valueChanges.subscribe(x => {
+    this.round = this.scoreTypes()[x - 1].round;
+    this.min = this.scoreTypes()[x - 1].min;
+    this.max = this.scoreTypes()[x - 1].max;
+  });
 
   continents = toSignal(this.apiSvc.getContinents(), { initialValue: [] });
   scoreTypes = toSignal(this.apiSvc.getScoreTypes(), { initialValue: [] });

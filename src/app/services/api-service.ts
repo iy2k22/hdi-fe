@@ -6,7 +6,7 @@ import { ScoreAddCountry } from '../models/score_add_country';
 import { Score, ScoreAddDTO } from '../models/score';
 import { ScoreListCountry } from '../models/score_list_country';
 import { CountryNames } from '../models/country_names';
-import { ScoreType } from '../models/score_types';
+import { ScoreType, ScoreTypeAddDTO } from '../models/score_types';
 
 @Injectable({
   providedIn: 'root',
@@ -83,5 +83,9 @@ export class ApiService {
   
   getScoreTypes() {
     return this.http.get<ScoreType[]>(`${this.baseUrl}/GetScoreTypes`);
+  }
+  
+  uploadScoreTypes(types: ScoreTypeAddDTO[]) {
+    return this.http.post(`${this.baseUrl}/UploadScoreTypes`, types);
   }
 }

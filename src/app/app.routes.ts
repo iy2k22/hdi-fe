@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { HomePage } from './components/home-page/home-page';
 import { CountryAdd } from './components/country-add/country-add';
 import { ScoreAdd } from './components/score-add/score-add';
+import { ScoreTypeAdd } from './components/score-type-add/score-type-add';
 
 export const routes: Routes = [
     {
@@ -15,5 +16,9 @@ export const routes: Routes = [
     {
         path: 'score-add',
         component: ScoreAdd
+    },
+    {
+        path: 'score-type-add',
+        component: ScoreTypeAdd
     }
 ];

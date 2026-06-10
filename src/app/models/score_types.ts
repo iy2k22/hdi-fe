@@ -5,4 +5,9 @@ export interface ScoreType {
     max: number;
     step: number;
     round: number;
+    ascending: boolean;
+}
+
+export interface ScoreTypeAddDTO extends ScoreType {
+    editing: boolean;
 }

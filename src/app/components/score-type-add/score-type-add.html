@@ -1,0 +1,82 @@
+<header>
+    <h1 class="bg-dark text-white p-5">Add a score type</h1>
+    <div>
+        Here you can add a score type.
+    </div>
+</header>
+
+<main class="my-4">
+    <form [formArray]="theForm">
+    @for (x of theForm.controls; track x; let idx = $index) {
+        <div [formGroupName]="idx">
+            <div class="row justify-content-center my-3">
+                <div class="col-2">
+                    <label class="form-label">Name</label>
+                    <input
+                    class="form-control"
+                    list="score-types"
+                    formControlName="name"
+                    (change)="onNameChange(idx)" />
+                    
+                    <datalist id="score-types">
+                        @for (type of scoreTypes(); track type.id) {
+                            <option [value]="type.name"></option>
+                        }
+                    </datalist>
+                </div>
+                <div class="col-2">
+                    <label class="form-label">Minimum</label>
+                    <input
+                    type="number"
+                    class="form-control"
+                    formControlName="min" />
+                </div>
+                <div class="col-2">
+                    <label class="form-label">Maximum</label>
+                    <input
+                    type="number"
+                    class="form-control"
+                    formControlName="max" />
+                </div>
+                <div class="col-2">
+                    <label class="form-label">Step</label>
+                    <input
+                    type="number"
+                    class="form-control"
+                    formControlName="step" />
+                    
+                    <input
+                    type="checkbox"
+                    class="form-check-input"
+                    formControlName="ascending" />
+                    <label class="form-check-label">Ascending?</label>
+                </div>
+                <div class="col-2">
+                    <label class="form-label">Round</label>
+                    <input
+                    type="number"
+                    class="form-control"
+                    formControlName="round" />
+                </div>
+                <div class="col-1 py-4">
+                    <button
+                    class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    }
+    </form>
+    
+    <button
+    class="btn btn-primary"
+    (click)="uploadTypes()">Submit</button>
+    <button
+    class="btn btn-success"
+    (click)="addEntry()">Add</button>
+</main>
+
+<footer>
+    <app-footer />
+</footer>
+
+<app-toast />

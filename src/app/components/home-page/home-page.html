@@ -47,12 +47,20 @@
                     } @else {
                         <h2>{{ cat[0] }}</h2>
                     }
-                        <app-hdi-table [data]="cnt.filter(x => x.score >= cat[1] && x.score < cat[2])" [round]="round" />
+                        <app-hdi-table
+                        [data]="cnt.filter(x => x.score >= cat[1] && x.score < cat[2])"
+                        [round]="round"
+                        [min]="min"
+                        [max]="max" />
                     </div>
                 }
             }
         } @else {
-            <app-hdi-table [data]="cnt" [round]="round" />
+            <app-hdi-table
+            [data]="cnt"
+            [round]="round"
+            [min]="min"
+            [max]="max" />
         }
     }
 </main>

@@ -10,4 +10,11 @@ import { ScoreListCountry } from '../../models/score_list_country';
 export class HdiTable {
   data = input<ScoreListCountry[]>([]);
   round = input<number>(3);
+  min = input<number>(0);
+  max = input<number>(1);
+  
+  getColor(scr: number) {
+    const hue = (scr / this.max()) * 120;
+    return `hsl(${hue}, 50%, 50%)`;
+  }
 }

@@ -6,3 +6,7 @@ export interface Country {
     flag2: string;
     isMuslim: boolean;
 }
+
+export interface CountryAddDTO extends Country {
+    editing: boolean;
+}

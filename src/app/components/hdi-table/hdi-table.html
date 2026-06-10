@@ -9,7 +9,9 @@
         </td>
         <td class="text-end">
         @if (cnt.score !== -1) {
+            <span [style.color]="getColor(cnt.score)">
             {{ cnt.score.toFixed(round()) }}
+            </span>
         } @else {
             -.---
         }
