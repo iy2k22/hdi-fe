@@ -7,6 +7,7 @@ import { Footer } from '../footer/footer';
 import { AppToast } from '../toast/toast';
 import { ToastSvc } from '../../services/toast-svc';
 import { CountryNames } from '../../models/country_names';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-score-add',
@@ -38,19 +39,22 @@ export class ScoreAdd implements OnInit {
     scoreType: [1]
   });
   */
-  theForm: FormArray = this.fb.array([this.fb.group({
-    country: [0],
-    scoreValue: [0],
-    year: [2023],
-    scoreType: [1],
-    notRanked: [false],
-    editing: [false],
-    id: [0]
-  })]);
-
+  theForm: FormArray = this.fb.array([]);
+  scr$!: Subscription;
  
   ngOnInit(): void {
     this.apiSvc.getCountryNames().subscribe(x => this.countryNames = x);
+    
+    const localScores = localStorage.getItem('scores');
+    if (localScores && localScores.length > 0) {
+      const parsed = JSON.parse(localScores);
+      for (let i = 0; i < parsed.length; ++i) {
+        this.theForm.push(this.genRow());
+      }
+      this.theForm.setValue(parsed);
+    } else
+      this.theForm.push(this.genRow());
+    this.scr$ = this.theForm.valueChanges.subscribe(() => localStorage.setItem('scores', JSON.stringify(this.theForm.value)));
   }
   
   sendData(e: Event) {
@@ -118,16 +122,25 @@ export class ScoreAdd implements OnInit {
   }
   
   addRow() {
-    this.theForm.push(this.fb.group({
+    this.theForm.push(this.genRow());
+  }
+  
+  deleteRow(idx: number) {
+    this.theForm.removeAt(idx);
+  }
+  
+  genRow() {
+    return this.fb.group({
     country: [0],
     scoreValue: [0],
     year: [2023],
     scoreType: [1],
     notRanked: [false]
-    }));
+    })
   }
   
-  deleteRow(idx: number) {
-    this.theForm.removeAt(idx);
+  resetForm() {
+    this.theForm.clear();
+    this.theForm.push(this.genRow());
   }
 }
