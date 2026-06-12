@@ -40,6 +40,7 @@ export class HomePage {
   round: number = 3;
   min: number = 0;
   max: number = 1;
+  ascending: boolean = false;
   
   /*
   cnt$ = this.continent.valueChanges.pipe(
@@ -60,6 +61,7 @@ export class HomePage {
     this.round = this.scoreTypes()[x - 1].round;
     this.min = this.scoreTypes()[x - 1].min;
     this.max = this.scoreTypes()[x - 1].max;
+    this.ascending = this.scoreTypes()[x - 1].ascending;
   });
 
   continents = toSignal(this.apiSvc.getContinents(), { initialValue: [] });

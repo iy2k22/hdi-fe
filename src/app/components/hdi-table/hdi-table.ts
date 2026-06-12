@@ -12,9 +12,11 @@ export class HdiTable {
   round = input<number>(3);
   min = input<number>(0);
   max = input<number>(1);
+  ascending = input<boolean>(false);
   
   getColor(scr: number) {
-    const hue = (scr / this.max()) * 120;
+    const amount = this.ascending() ? this.max() - scr : scr;
+    const hue = (amount / this.max()) * 120;
     return `hsl(${hue}, 50%, 50%)`;
   }
 }
