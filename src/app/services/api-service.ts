@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Continent } from '../models/continent';
-import { Country } from '../models/country';
+import { Country, CountryAddDTO } from '../models/country';
 import { ScoreAddCountry } from '../models/score_add_country';
 import { Score, ScoreAddDTO } from '../models/score';
 import { ScoreListCountry } from '../models/score_list_country';
@@ -20,8 +20,8 @@ export class ApiService {
     return this.http.get<Continent[]>(`${this.baseUrl}/GetContinents`);
   }
   
-  createCountry(country: Country) {
-    return this.http.post(`${this.baseUrl}/CreateCountry`, country);
+  addCountries(countries: CountryAddDTO[]) {
+    return this.http.post(`${this.baseUrl}/AddCountries`, countries);
   }
   
   getScoreAddCountry() {

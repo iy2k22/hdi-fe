@@ -1,68 +1,100 @@
-<header>
-    <h1 class="bg-dark text-white p-5">Add/Edit a country</h1>
+<header class="bg-dark text-white p-5">
+    <h1>Add a country</h1>
     <div>
-        Here you can add/edit a country/territory to the database. The name and the continent are self-explanatory.
-        Flag 1 and Flag 2 refer to the 2 parts of the flag emoji's html code. You can obtain these codes <a
-            href="https://emojipedia.org/flags">here</a>.
+        Here you can add/edit countries.
     </div>
 </header>
-<main class="my-4">
-    <form [formGroup]="theForm">
-        <div class="row justify-content-center my-2">
-            <div class="col-4">
-                <label for="name" class="form-label">Name</label>
-                <input id="name"
-                list="country-names"
-                type="text"
-                formControlName="name"
-                (change)="onNameChange($event)"
-                class="form-control">
-                
-                <datalist id="country-names">
-                    @for (name of countryNames; track name) {
-                        <option [value]="name"></option>
-                    }
-                </datalist>
-            </div>
 
-
-            <div class="col-4">
-                <label for="continent" class="form-label">Continent</label>
-                <select id="continent" formControlName="continent" class="form-select">
-                    @for (cnt of continents(); track cnt.id) {
-                    <option [value]="cnt.id">{{ cnt.name }}</option>
-                    }
-                </select>
-            </div>
+<main class="my-2">
+    <div class="row justify-content-center">
+        <div class="col-2"></div>
+        <div class="col-2">
+            <label class="form-label">Name</label>
         </div>
-
-        <div class="row justify-content-center my-2">
-            <div class="col-4">
-                <label for="flag1" class="form-label">Flag 1</label>
-                <input id="flag1" type="text" formControlName="flag1" class="form-control" (change)="onFlagChange($event)" />
-            </div>
-            <div class="col-4">
-                <label for="flag2" class="form-label">Flag 2</label>
-                <input id="flag2" type="text" formControlName="flag2" class="form-control" (change)="onFlagChange($event)" />
-            </div>
+        <div class="col-2">
+            <label class="form-label">Continent</label>
         </div>
-
-
-
-
-        <input id="isMuslim" type="checkbox" formControlName="isMuslim" />
-        <label for="isMuslim">Muslim?</label>
-
-        <br />
-        
-        <button class="btn btn-primary" (click)="sendData($event)">Submit</button>
+        <div class="col-2">
+            <label class="form-label">Flag 1</label>
+        </div>
+        <div class="col-2">
+            <label class="form-label">Flag 2</label>
+        </div>
+        <div class="col-2"></div>
+    </div>
+    <form [formArray]="theForm">
+        @for (c of theForm.controls; track c; let i = $index) {
+            <div class="row justify-content-center my-3" [formGroupName]="i">
+                <div class="col-2">
+                    <h2>
+                        <span [innerHTML]="getFlag(i)"></span>
+                    </h2>
+                </div>
+                <div class="col-2">
+                    <input
+                    type="text"
+                    class="form-control"
+                    list="country-names"
+                    (change)="onNameChange(i)"
+                    formControlName="name" />
+                    
+                    <datalist
+                    id="country-names">
+                        @for (name of countryNames(); track name) {
+                            <option [value]="name"></option>
+                        }
+                    </datalist>
+                    
+                    <div class="form-check text-start">
+                        <input
+                        class="form-check-input"
+                        type="checkbox"
+                        formControlName="isMuslim" />
+                        <label class="form-check-label">Muslim?</label>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <select
+                    class="form-select"
+                    formControlName="continent">
+                        @for (cnt of continents(); track cnt.id) {
+                            <option [value]="cnt.id">{{ cnt.name }}</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-2">
+                    <input
+                    type="text"
+                    class="form-control"
+                    formControlName="flag1" />
+                </div>
+                <div class="col-2">
+                    <input
+                    type="text"
+                    class="form-control"
+                    formControlName="flag2" />
+                </div>
+                <div class="col-2">
+                    <button
+                    class="btn btn-danger"
+                    (click)="deleteEntry(i)">Delete</button>
+                </div>
+            </div>
+        }
     </form>
     <br />
-    <h2>Flag: <span [innerHTML]="flag"></span></h2>
-    <br />
 
-    <app-toast />
+    <button
+    class="btn btn-success"
+    (click)="addEntry()">Add</button>
+
+    <button
+    class="btn btn-primary"
+    (click)="submitData()">Submit</button>
 </main>
+
 <footer>
     <app-footer />
 </footer>
+
+<app-toast />
