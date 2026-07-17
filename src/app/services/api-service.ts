@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Continent } from '../models/continent';
 import { Country, CountryAddDTO } from '../models/country';
@@ -15,6 +15,16 @@ export class ApiService {
   baseUrl: string = 'http://localhost:5098/Hdi';
   
   constructor(private http: HttpClient) {}
+  
+  getHttpHeaders(): HttpHeaders {
+    const token = JSON.parse(localStorage.getItem("token") ?? "");
+    const headers = new HttpHeaders({
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    });
+
+    return headers;
+  }
   
   getContinents() {
     return this.http.get<Continent[]>(`${this.baseUrl}/GetContinents`);
@@ -86,6 +96,9 @@ export class ApiService {
   }
   
   uploadScoreTypes(types: ScoreTypeAddDTO[]) {
-    return this.http.post(`${this.baseUrl}/UploadScoreTypes`, types);
+    const headers = this.getHttpHeaders();
+    return this.http.post(`${this.baseUrl}/UploadScoreTypes`, types, {
+      headers
+    });
   }
 }

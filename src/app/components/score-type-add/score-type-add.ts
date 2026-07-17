@@ -6,6 +6,7 @@ import { ApiService } from '../../services/api-service';
 import { Footer } from "../footer/footer";
 import { AppToast } from "../toast/toast";
 import { ToastSvc } from '../../services/toast-svc';
+import { AuthApi } from '../../services/auth-api';
 
 @Component({
   selector: 'app-score-type-add',
@@ -13,9 +14,10 @@ import { ToastSvc } from '../../services/toast-svc';
   templateUrl: './score-type-add.html',
   styleUrl: './score-type-add.css',
 })
-export class ScoreTypeAdd {
+export class ScoreTypeAdd implements OnInit {
   private fb = inject(FormBuilder);
   private apiSvc = inject(ApiService);
+  private authApi = inject(AuthApi);
   private toastSvc = inject(ToastSvc);
   
   theForm: FormArray = this.fb.array([
@@ -30,6 +32,10 @@ export class ScoreTypeAdd {
       editing: [false]
     })
   ]);
+  
+  ngOnInit(): void {
+    console.log(this.apiSvc.getHttpHeaders());
+  }
   
   scoreTypes = toSignal(this.apiSvc.getScoreTypes(), { initialValue: [] });
   

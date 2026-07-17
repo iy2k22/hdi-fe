@@ -1,0 +1,21 @@
+<div class="card mx-auto" style="width: 18rem;">
+    <img src="mark.webp" />
+    <form class="card-body" [formGroup]="login">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-control" formControlName="email" />
+
+        <label class="form-label">Password</label>
+        <input type="password" class="form-control" formControlName="password" />
+
+        <button type="submit" class="btn btn-primary" (click)="tryLogin()">Login</button>
+        @if (error) {
+        <p class="text-danger">Invalid login</p>
+        }
+    </form>
+</div>
+
+<br />
+
+<footer>
+    <app-footer />
+</footer>

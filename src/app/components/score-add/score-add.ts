@@ -115,6 +115,7 @@ export class ScoreAdd implements OnInit {
       } else {
         toWorkOn.patchValue({
           id: 0,
+          scoreValue: 0,
           editing: false
         })
       }
@@ -133,8 +134,8 @@ export class ScoreAdd implements OnInit {
     return this.fb.group({
     country: [0],
     scoreValue: [0],
-    year: [2023],
-    scoreType: [1],
+    year: [2026],
+    scoreType: [3],
     notRanked: [false]
     })
   }
