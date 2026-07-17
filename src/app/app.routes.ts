@@ -4,6 +4,7 @@ import { CountryAdd } from './components/country-add/country-add';
 import { ScoreAdd } from './components/score-add/score-add';
 import { ScoreTypeAdd } from './components/score-type-add/score-type-add';
 import { Login } from './components/login/login';
+import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
     {
@@ -12,18 +13,29 @@ export const routes: Routes = [
     },
     {
         path: 'country-add',
-        component: CountryAdd
+        component: CountryAdd,
+        canActivate: [authGuard],
+        runGuardsAndResolvers: 'always'
     },
     {
         path: 'score-add',
-        component: ScoreAdd
+        component: ScoreAdd,
+        canActivate: [authGuard],
+        runGuardsAndResolvers: 'always'
     },
     {
         path: 'score-type-add',
-        component: ScoreTypeAdd
+        canActivate: [authGuard],
+        component: ScoreTypeAdd,
+        runGuardsAndResolvers: 'always'
     },
     {
         path: 'login',
         component: Login
+    },
+    {
+        path: '',
+        redirectTo: '/home-page',
+        pathMatch: 'full'
     }
 ];

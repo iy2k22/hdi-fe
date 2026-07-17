@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Form, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthApi } from '../../services/auth-api';
 import { Footer } from '../footer/footer';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-login',
@@ -10,15 +11,19 @@ import { Router } from '@angular/router';
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
-export class Login {
+export class Login implements OnInit {
   login!: FormGroup;
   error: boolean = false;
   errorMsg!: string;
+  
+  returnUrl: string = '/home-page';
 
   constructor(
     private fb: FormBuilder,
     private authApi: AuthApi,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
+    private authSvc: AuthService
   ) {
     this.login = this.fb.group({
       email: ['', Validators.required],
@@ -26,16 +31,18 @@ export class Login {
     });
   }
   
+  ngOnInit(): void {
+    const queryUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+    if (queryUrl)
+      this.returnUrl = queryUrl;
+  }
+  
   tryLogin() {
     this.error = false;
     this.authApi.login(this.login.value).subscribe({
       next: (res) => {
-        const { token, refreshToken } = res;
-        console.log('Success!');
-        console.log(res);
-        localStorage.setItem("refreshToken", JSON.stringify(refreshToken));
-        localStorage.setItem("token", JSON.stringify(token));
-        this.router.navigate(['/home-page']);
+        this.authSvc.authenticate(res);
+        this.router.navigate([this.returnUrl]);
       },
       error: (err) => {
         this.error = true;

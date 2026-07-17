@@ -3,6 +3,7 @@
         <div class="col-2">
             <a routerLink="/home-page">Score List</a>
         </div>
+        @if (authSvc.isAuthenticated()) {
         <div class="col-2">
             <a routerLink="/country-add">Add a country</a>
         </div>
@@ -12,8 +13,13 @@
         <div class="col-2">
             <a routerLink="/score-type-add">Add a score type</a>
         </div>
+        }
         <div class="col-2">
-            <a routerLink="/login">Login</a>
+            @if (!authSvc.isAuthenticated()) {
+            <a routerLink="/login" [queryParams]="{ returnUrl: router.url }">Login</a>
+            } @else {
+            <a routerLink="#" (click)="logout()">Logout</a>
+            }
         </div>
     </nav>
 </div>

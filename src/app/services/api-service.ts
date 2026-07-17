@@ -17,7 +17,7 @@ export class ApiService {
   constructor(private http: HttpClient) {}
   
   getHttpHeaders(): HttpHeaders {
-    const token = JSON.parse(localStorage.getItem("token") ?? "");
+    const token = localStorage.getItem("token");
     const headers = new HttpHeaders({
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`
