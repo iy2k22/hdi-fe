@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { Form, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthApi } from '../../services/auth-api';
 import { Footer } from '../footer/footer';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
+import { firstValueFrom, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -13,9 +14,8 @@ import { AuthService } from '../../services/auth-service';
 })
 export class Login implements OnInit {
   login!: FormGroup;
-  error: boolean = false;
-  errorMsg!: string;
-  
+  error = signal<boolean>(false);
+
   returnUrl: string = '/home-page';
 
   constructor(
@@ -37,18 +37,16 @@ export class Login implements OnInit {
       this.returnUrl = queryUrl;
   }
   
-  tryLogin() {
-    this.error = false;
-    this.authApi.login(this.login.value).subscribe({
-      next: (res) => {
-        this.authSvc.authenticate(res);
-        this.router.navigate([this.returnUrl]);
-      },
-      error: (err) => {
-        this.error = true;
-        console.log('Error!');
-        console.error(err);
-      }
-    })
+  async tryLogin() {
+    this.error.set(false);
+
+    try {
+      const res = await firstValueFrom(this.authApi.login(this.login.value));
+      this.authSvc.authenticate(res);
+      this.router.navigate([this.returnUrl]);
+    } catch (ex) {
+      this.error.set(true);
+      console.error(ex);
+    }
   }
 }

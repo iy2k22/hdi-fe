@@ -8,7 +8,7 @@
         <input type="password" class="form-control" formControlName="password" />
 
         <button type="submit" class="btn btn-primary" (click)="tryLogin()">Login</button>
-        @if (error) {
+        @if (error()) {
         <p class="text-danger">Invalid login</p>
         }
     </form>
