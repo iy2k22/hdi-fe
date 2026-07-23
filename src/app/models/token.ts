@@ -1,5 +1,5 @@
 export interface TokenDTO {
-    expiresAt: Date;
+    expiresAt: Date | null;
     refreshToken: string;
     token: string;
 }

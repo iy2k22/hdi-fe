@@ -16,4 +16,15 @@ export class AuthApi {
   login(dto: LoginDTO) {
     return this.http.post<TokenDTO>(`${this.baseUrl}/login`, dto);
   }
+  
+  refreshToken(token: string, refreshToken: string) {
+    return this.http.post<TokenDTO>(`${this.baseUrl}/refreshToken`, {
+      token,
+      refreshToken
+    });
+  }
+  
+  hasTokenExpired(token: string) {
+    return this.http.post<boolean>(`${this.baseUrl}/hasTokenExpired`, token);
+  }
 }
